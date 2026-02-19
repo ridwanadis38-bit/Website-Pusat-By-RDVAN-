@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dirimu yang Dulu</title>
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(-45deg, #ff6eb4, #ff4d4d, #4d9eff, #b366ff);
+  background-size: 600% 600%;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:100vh;
+  padding:40px 20px;
+  animation:gradientBG 20s ease infinite;
+  text-align:center;
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  25%{background-position:50% 50%;}
+  50%{background-position:100% 50%;}
+  75%{background-position:50% 50%;}
+  100%{background-position:0% 50%;}
+}
+h1{
+  color:#fff;
+  font-size:32px;
+  margin-bottom:15px;
+  text-shadow:0 0 10px #ffb3c6;
+}
+.logo{
+  width:180px;
+  height:180px;
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:15px;
+  box-shadow:0 0 25px rgba(255,110,180,0.5);
+}
+.logo img{width:100%; height:100%; object-fit:cover;}
+audio{width:300px; margin-bottom:30px; border-radius:10px; box-shadow:0 0 20px rgba(255,110,180,0.4);}
+.song-title-top{
+  font-size:28px; font-weight:500; color:#fff; margin:20px 0; text-shadow:0 0 6px #ffb3c6;
+}
+.lyrics{
+  max-width:400px; color:#eee; font-size:16px; line-height:1.6; text-align:center;
+  white-space:pre-wrap; margin-bottom:40px; background: rgba(0,0,0,0.4);
+  padding:20px; border-radius:12px; box-shadow:0 0 15px rgba(255,110,180,0.3);
+  transition: opacity 0.4s ease;
+  min-height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+a.back-btn{color:#ffb86c; text-decoration:none; font-weight:bold; transition:0.2s;}
+a.back-btn:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<h1>Lagu Favoritku</h1>
+<div class="logo"><img src="https://i.imgur.com/idCk4bk.jpeg" alt="Logo RDVAN"></div>
+<div class="song-title-top">Dirimu yang Dulu - Anggis Devaki</div>
+
+<audio id="audio" controls preload="auto">
+  <source src="lagu.mp3" type="audio/mpeg">
+  Browser kamu tidak mendukung audio.
+</audio>
+
+<div class="lyrics" id="lyrics">...</div>
+<a href="index.html" class="back-btn">← Kembali ke Profil</a>
+
+<script>
+const audio = document.getElementById('audio');
+const lyricsDiv = document.getElementById('lyrics');
+
+const lyrics = [
+  {start:9, end:15, text:"Harusnya aku katakan dari dulu"},
+  {start:17, end:23, text:"Sebelum semua jadi begini"},
+  {start:25, end:32, text:"Kini terlanjur kisah sudah tak sama"},
+  {start:33, end:39, text:"Seperti awal bertemu"},
+  {start:41, end:48, text:"Kamu telah banyak berubah"},
+  {start:49, end:60, text:"Tak seperti yang kukenal dahulu hm-hm"},
+  {start:62, end:66, text:"Mana dirimu yang dahulu"},
+  {start:67, end:70, text:"Yang selalu pentingkan aku"},
+  {start:70, end:79, text:"Kini yang terdengar hanya suara amarahmu"},
+  {start:79, end:82, text:"Mana kekasihku yang dulu"},
+  {start:83, end:90, text:"Yang tak pernah bisa melihatku menangis bersedih"},
+  {start:90, end:97, text:"Mana dirimu yang dahulu"},
+  {start:111, end:115, text:"Mana kekasihku yang dulu"},
+  {start:116, end:124, text:"Kurindukan semua masa bahagia seperti dulu"},
+  {start:125, end:130, text:"Saat tulusmu masih untukku hu-uh-oh"},
+  {start:133, end:141, text:"Kamu kini jauh berbeda"},
+  {start:142, end:150, text:"Tak seperti yang kukenal dahulu"},
+  {start:151, end:155, text:"Mana dirimu yang dahulu"},
+  {start:156, end:159, text:"Yang selalu pentingkan aku"},
+  {start:160, end:167, text:"Kini yang terdengar hanya suara amarahmu"},
+  {start:168, end:171, text:"Mana kekasihku yang dulu"},
+  {start:172, end:179, text:"Yang tak pernah bisa melihatku menangis bersedih"},
+  {start:180, end:190, text:"Mana dirimu yang dahulu hu-uh-uh"},
+  {start:193, end:200, text:"Kini hanya suara amarahmu"},
+  {start:201, end:206, text:"Mana kekasihku yang dulu"},
+  {start:207, end:213, text:"Yang pentingkan aku hu-uh hu-uh"},
+  {start:214, end:220, text:"Mana dirimu yang dulu"},
+  {start:221, end:230, text:"Kurindu dirimu yang dulu"},
+  // revisi waktu tambahan
+  {start:124, end:130, text:"Saat tulusmu masih untukku hu-uh-oh"}, // 2:04
+  {start:141, end:150, text:"Tak seperti yang kukenal dahulu"},     // 2:21
+  {start:155, end:159, text:"Yang selalu pentingkan aku"},           // 2:35
+  {start:159, end:167, text:"Kini yang terdengar hanya suara amarahmu"} // 2:39
+];
+
+let currentIndex = -1;
+
+audio.addEventListener('timeupdate', () => {
+  const t = audio.currentTime;
+  const newIndex = lyrics.findIndex(line => t >= line.start && t < line.end);
+  if (newIndex !== -1 && newIndex !== currentIndex) {
+    currentIndex = newIndex;
+    lyricsDiv.style.opacity = 0;
+    setTimeout(() => {
+      lyricsDiv.textContent = lyrics[currentIndex].text;
+      lyricsDiv.style.opacity = 1;
+    }, 200);
+  }
+  if (currentIndex !== -1 && (t < lyrics[currentIndex].start || t >= lyrics[currentIndex].end)) {
+    lyricsDiv.style.opacity = 0;
+  }
+});
+</script>
+
+</body>
+</html>
